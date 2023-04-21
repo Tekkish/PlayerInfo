@@ -1,0 +1,264 @@
+/*-----------------------\
+   PlayerInfo by Tekish
+\-----------------------*/
+
+class playerinfobridge
+{
+	ui private static int getammo()
+	{
+		ammo ammo1, ammo2;
+		int ammo1amount = -1, ammo1max = -1, ammo2amount = -1, ammo2max = -1;
+		playerinfo player = players[consoleplayer];
+
+		if (player.readyweapon != null)
+		{
+			ammo1 = player.readyweapon.ammo1;
+			ammo2 = player.readyweapon.ammo2;
+		}
+
+		if (ammo1 != null)
+		{
+			ammo1amount = ammo1.amount;
+			ammo1max = ammo1.maxamount;
+		}
+
+		if (ammo2 != null)
+		{
+			ammo2amount = ammo2.amount;
+			ammo2max = ammo2.maxamount;
+		}
+
+		cvar.getcvar("pi_bridge_ammo1max", player).setint(ammo1max);
+		cvar.getcvar("pi_bridge_ammo2", player).setint(ammo2amount);
+		cvar.getcvar("pi_bridge_ammo2max", player).setint(ammo2max);
+
+		return ammo1amount;
+	}
+
+	ui private static int getconsoleplayer()
+	{
+		return consoleplayer;
+	}
+}
+
+class playerinfohandler : eventhandler
+{
+	override void renderoverlay(renderevent e) 
+	{
+		playerinfo player = players[consoleplayer];
+		bool showkeys = cvar.getcvar("pi_showkeys", player).getint();
+
+		if (automapactive && !cvar.getcvar("pi_showonmap", player).getint())
+			showkeys = false;
+
+		if (showkeys && cvar.getcvar("pi_visible", player).getint())
+		{
+			bool keyalign, keybottom, keyleft, keyright, keytop;
+			int count = key.getkeytypecount();
+			int flags, keycount, keyplacement, keyretain, keyspace, x, y;
+			int keylimit = 12;
+			int keymargin = 6;
+			int keyposition = cvar.getcvar("pi_keyposition", player).getint();
+			int keysize = cvar.getcvar("pi_keysize", player).getint();
+			int keyusesprites = cvar.getcvar("pi_keyusesprites", player).getint();
+			int screenheight = screen.getheight();
+			int screenwidth = screen.getwidth();
+			int statusbar = screenheight - statusbar.gettopofstatusbar();
+			key getkey;
+			textureid icon;
+			vector2 iconsize;
+
+			if (keyposition == 0)
+			{
+				keyalign = cvar.getcvar("pi_keyalign", player).getint();
+				keyplacement = cvar.getcvar("pi_keyplacement", player).getint();
+				x = cvar.getcvar("pi_xkey", player).getint();
+				y = cvar.getcvar("pi_ykey", player).getint();
+			}
+			else if (keyposition < 1 || keyposition > 8)
+			{
+				keyposition = 1;
+			}
+
+			if (keysize < 0 || keysize > 6)
+				keysize = 3;
+
+			double scale = double(keysize);
+			double virtualheight = double(screenheight) / scale;
+			double virtualwidth = double(screenwidth) / scale;
+
+			if (cvar.getcvar("screenblocks", player).getint() < 11)
+				screenheight = screenheight - statusbar;
+
+			for (int i = 0; i < count; i++)
+			{
+				if (getkey = key(player.mo.findinventory(key.getkeytype(i))))
+				{
+					if (!keyusesprites)
+					{
+						flags = basestatusbar.DI_ALTICONFIRST | basestatusbar.DI_SKIPSPAWN;
+						keyspace = 3;
+					}
+					else
+					{
+						flags = basestatusbar.DI_SKIPALTICON | basestatusbar.DI_SKIPICON;
+						keyspace = 6;
+					}
+
+					icon = basestatusbar.getinventoryicon(getkey, flags);
+
+					if (!icon.isvalid() || texman.getname(icon) ~== "TNT1A0")
+						continue;
+
+					if (keycount == keylimit - 1)
+						break;
+					else
+						keycount++;
+
+					keybottom = false;
+					keyleft = false;
+					keyright = false;
+					keytop = false;
+
+					if (keyposition == 0)
+					{
+						if (keycount == 1)
+						{
+							if (x < 0)
+								x = 0;
+							else if (x > screenwidth)
+								x = screenwidth;
+
+							if (y < 0)
+								y = 0;
+							else if (y > screenheight)
+								y = screenheight;
+
+							if (keyplacement < 0 || keyplacement > 3)
+							{
+								keyplacement = 0;
+							}
+							else
+							{
+								if (keyplacement == 0)
+								{
+									if (keyalign)
+										keyretain = y;
+								}
+								if (keyplacement == 1)
+								{
+									keybottom = true;
+									keymargin = 0;
+									screenheight = y;
+								}
+								else if (keyplacement == 2)
+								{
+									if (keyalign)
+										keyretain = y;
+
+									keymargin = 0;
+									keyright = true;
+									screenwidth = x;
+								}
+							}
+						}
+
+						if (keyalign && (keyplacement == 0 || keyplacement == 2))
+						{
+							keybottom = true;
+							keymargin = 0;
+							screenheight = keyretain;
+						}
+					}
+					else if (keyposition == 1 || keyposition == 2)
+					{
+						if (keycount == 1)
+						{
+							keyleft = true;
+							keytop = true;
+						}
+
+						if (keyposition == 1)
+							keyplacement = 0;
+						else
+							keyplacement = 3;
+					}
+					else if (keyposition == 3 || keyposition == 4)
+					{
+						if (keycount == 1)
+							keyleft = true;
+
+						if ((keycount == 1 && keyposition == 3) || keyposition == 4)
+						{
+							keybottom = true;
+							keyplacement = 0;
+						}
+						else if (keyposition == 3)
+						{
+							keyleft = true;
+							keyplacement = 1;
+						}
+					}
+					else if (keyposition == 5 || keyposition == 6)
+					{
+						if (keycount == 1)
+						{
+							keyright = true;
+							keytop = true;
+						}
+
+						if (keyposition == 5)
+							keyplacement = 2;
+						else
+							keyplacement = 3;
+					}
+					else if (keyposition == 7 || keyposition == 8)
+					{
+						if (keycount == 1)
+							keyright = true;
+
+						if ((keycount == 1 && keyposition == 7) || keyposition == 8)
+						{
+							keybottom = true;
+							keyplacement = 2;
+						}
+						else if (keyposition == 7)
+						{
+							keyplacement = 1;
+							keyright = true;
+						}
+					}
+
+					iconsize = texman.getscaledsize(icon);
+
+					if (keybottom)
+						y = screenheight - ((keymargin + iconsize.y) * scale);
+
+					if (keyleft)
+						x = keymargin * scale;
+
+					if (keyright)
+						x = screenwidth - ((keymargin + iconsize.x) * scale);
+
+					if (keytop)
+						y = keymargin * scale;
+
+					if (keycount > 1)
+					{
+						if (keyplacement == 0) // Left to Right
+							x += (iconsize.x + keyspace) * scale;
+						else if (keyplacement == 1) // Bottom to Top
+							y -= (iconsize.y + keyspace) * scale;
+					}
+
+					screen.drawtexture(icon, false, x / scale, y / scale, DTA_KeepRatio, true, DTA_LeftOffset, 0, DTA_TopOffset, 0, DTA_VirtualHeightF, virtualheight, DTA_VirtualWidthF, virtualwidth);
+
+					if (keyplacement == 2) // Right to Left
+						x -= (iconsize.x + keyspace) * scale;
+					else if (keyplacement == 3) // Top to Bottom
+						y += (iconsize.y + keyspace) * scale;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,527 @@
+/*-----------------------\
+   PlayerInfo by Tekish
+\-----------------------*/
+
+#library "playerinfo"
+#include "zcommon.acs"
+
+#define PI_BASECOLOR	CR_WHITE
+#define PI_COLOR_DARK	"u"
+#define PI_COLOR_HIGH	"d"
+#define PI_COLOR_LOW	"a"
+#define PI_COLOR_MAX	"y"
+#define PI_COLOR_MED	"k"
+#define PI_FLAGS		HUDMSG_PLAIN | HUDMSG_ALPHA | HUDMSG_NOWRAP
+#define PI_ID_TEXTS		165000
+#define PI_ID_VALUES	PI_ID_TEXTS + 1
+#define PI_MAXNUMBER	99999
+#define PI_REFRESH		3
+#define PI_SPACE		"`"
+#define PI_TICRATE		35
+#define PI_TOTAL		3
+#define PI_TIME			(PI_REFRESH << 16) / PI_TICRATE + 1
+
+bool highlightactive[PI_TOTAL];
+int highlight[PI_TOTAL];
+str text[PI_TOTAL];
+str value[PI_TOTAL];
+
+/*------------\
+   Functions
+\------------*/
+
+function void alignvalue(bool align)
+{
+	for (int i = 0; i < PI_TOTAL; i++)
+	{
+		if (strcmp(text[i], ""))
+		{
+			if (align)
+				value[i] = strparam(s:generatespace(maxlength(1, false, 0) - strlen(value[i]), 0), s:value[i]);
+		}
+	}
+}
+
+function str coloredtext(str color, str string, bool addcolor)
+{
+	if (addcolor)
+		return strparam(s:"\c", s:color, s:string, s:"\c-");
+
+	return string;
+}
+
+function int generatehighlight(int type, int value1, int value2)
+{
+	int highlighttype;
+
+	switch (type)
+	{
+		case 1: // Health
+			if (value1 <= 25)
+				highlighttype = 1;
+			else if (value1 <= 50)
+				highlighttype = 2;
+			else if (value1 > 50 && value1 <= 100)
+				highlighttype = 3;
+			else if (value1 > 100)
+				highlighttype = 4;
+
+			break;
+
+		case 2: // Armor
+			if (value1 < 1)
+				highlighttype = 1;
+			else if (value1 <= 50)
+				highlighttype = 2;
+			else if (value1 > 50 && value1 <= 100)
+				highlighttype = 3;
+			else if (value1 > 100)
+				highlighttype = 4;
+
+			break;
+
+		default: // Ammo
+			int percentage;
+
+			if (value2)
+				percentage = 100 * value1 / value2;
+
+			if (value1 < 1)
+				highlighttype = 1;
+			else if (percentage <= 25)
+				highlighttype = 2;
+			else if (value1 == value2)
+				highlighttype = 3;
+	}
+
+	return highlighttype;
+}
+
+function str generatespace(int amount, int type)
+{
+	str space = "";
+
+	for (int i = 0; i < amount; i++)
+	{
+		switch (type)
+		{
+			case 1:
+				space = strparam(s:space, s:PI_SPACE, s:"\n");
+				break;
+
+			case 2:
+				space = strparam(s:space, s:"\n", s:PI_SPACE);
+				break;
+
+			default:
+				space = strparam(s:space, s:PI_SPACE);
+		}
+	}
+
+	return space;
+}
+
+function str highlightcolor(int type)
+{
+	str color = "";
+
+	switch (type)
+	{
+		case 1:
+			color = PI_COLOR_LOW;
+			break;
+
+		case 2:
+			color = PI_COLOR_MED;
+			break;
+
+		case 3:
+			color = PI_COLOR_HIGH;
+			break;
+
+		default:
+			color = PI_COLOR_MAX;
+	}
+
+	return color;
+}
+
+function int maxlength(int align, bool index, int limit)
+{
+	int length, max, maxindex;
+
+	if (!limit)
+		limit = PI_TOTAL;
+
+	for (int i = 0; i < limit; i++)
+	{
+		switch (align)
+		{
+			case 0:
+				length = strlen(text[i]);
+				break;
+
+			default:
+				length = strlen(value[i]);
+		}
+
+		if (length > max)
+		{
+			maxindex = i;
+			max = length;
+		}
+	}
+
+	if (index)
+		return maxindex;
+
+	return max;
+}
+
+function int maxnumber(int number, int maximum)
+{
+	if (number > maximum)
+		return maximum;
+
+	return number;
+}
+
+function str newline(str string)
+{
+	if (strcmp(string, ""))
+		return strparam(s:string, s:"\n");
+
+	return string;
+}
+
+function void spaceright(str space, int align)
+{
+	int i = maxlength(align, true, 0);
+
+	if (!align)
+		text[i] = strparam(s:text[i], s:space);
+	else
+		value[i] = strparam(s:value[i], s:space);
+}
+
+/*-------\
+   Core
+\-------*/
+
+function void playerinfo(void)
+{
+	if (getcvar("pi_visible"))
+	{
+		bool alignx, aligny;
+		bool position = getcvar("pi_position");
+		int offsetx = 1;
+		int offsety = 1;
+		int x, y;
+		str marginbottom = "", marginleft = "", margintop = "";
+
+		switch (position)
+		{
+			case 0:
+				alignx = getcvar("pi_alignx");
+				aligny = getcvar("pi_aligny");
+				x = getcvar("pi_x");
+				y = getcvar("pi_y");
+
+				if (x < 0 || x > 90)
+					x = 0;
+
+				if (y < 0 || y > 50)
+					y = 0;
+
+				offsetx = x + offsetx;
+				offsety = y + offsety;
+
+				if (!alignx)
+				{
+					marginleft = generatespace(offsetx, 0);
+					x = 0.0;
+				}
+				else
+				{
+					x = 1.0;
+				}
+
+				if (!aligny)
+				{
+					margintop = generatespace(offsety, 1);
+					y = 0.0;
+				}
+				else
+				{
+					marginbottom = generatespace(offsety, 2);
+					y = 1.0;
+				}
+
+				break;
+
+			case 1:
+				alignx = false;
+				marginleft = generatespace(offsetx, 0);
+				margintop = generatespace(offsety, 1);
+				x = 0.0;
+				y = 0.0;
+				break;
+
+			case 3:
+				alignx = false;
+				marginbottom = generatespace(offsety, 2);
+				marginleft = generatespace(offsetx, 0);
+				x = 0.0;
+				y = 1.0;
+				break;
+
+			case 4:
+				alignx = true;
+				margintop = generatespace(offsety, 1);
+				x = 1.0;
+				y = 0.0;
+				break;
+
+			case 5:
+				alignx = true;
+				x = 1.0;
+				y = 0.5;
+				break;
+
+			case 6:
+				alignx = true;
+				marginbottom = generatespace(offsety, 2);
+				x = 1.0;
+				y = 1.0;
+				break;
+
+			default:
+				alignx = false;
+				marginleft = generatespace(offsetx, 0);
+				x = 0.0;
+				y = 0.5;
+		}
+
+		bool haveammo, havearmor;
+		bool highlightvalue = getcvar("pi_highlightvalue");
+		bool showammo = getcvar("pi_showammo");
+		bool showhealth = getcvar("pi_showhealth");
+		bool showonmap = getcvar("pi_showonmap");
+		int flags, i;
+		int opacity = getcvar("pi_opacity");
+		int showarmor = getcvar("pi_showarmor");
+		str texts = "", values = "";
+
+		for (i = 0; i < PI_TOTAL; i++)
+		{
+			highlight[i] = 0;
+			highlightactive[i] = false;
+			text[i] = "";
+			value[i] = "";
+		}
+
+		if (showonmap)
+			flags = PI_FLAGS;
+		else
+			flags = PI_FLAGS | HUDMSG_NOTWITHFULLMAP;
+
+		if (opacity < 10 || opacity > 100)
+			opacity = 100;
+
+		opacity = fixeddiv(opacity << 16, 100.0);
+
+		if (showhealth)
+		{
+			int health = getactorproperty(0, APROP_Health);
+
+			text[0] = "Health";
+			value[0] = strparam(d:health, s:"%");
+
+			if (highlightvalue)
+			{
+				highlight[0] = generatehighlight(1, health, 0);
+
+				if (highlight[0])
+					highlightactive[0] = true;
+			}
+		}
+
+		if (showarmor)
+		{
+			int armor = checkinventory("Armor");
+
+			if (armor > 0 || showarmor == 2)
+			{
+				havearmor = true;
+				text[1] = "Armor";
+				value[1] = strparam(d:armor, s:"%");
+
+				if (highlightvalue)
+				{
+					highlight[1] = generatehighlight(2, armor, 0);
+
+					if (highlight[1])
+						highlightactive[1] = true;
+				}
+			}
+		}
+
+		if (showammo)
+		{
+			int ammo1 = scriptcall("playerinfobridge", "getammo");
+			int ammo1max = getcvar("pi_bridge_ammo1max");
+			int ammo2 = getcvar("pi_bridge_ammo2");
+			int ammo2max = getcvar("pi_bridge_ammo2max");
+			str ammostring = "";
+
+			if (ammo1 != -1 || ammo2 != -1)
+			{
+				if (ammo1 == -1)
+				{
+					ammo1 = ammo2;
+					ammo1max = ammo2max;
+					ammo2 = -1;
+					ammo2max = -1;
+				}
+
+				if ((ammo1 == ammo2 && ammo1max == ammo2max) || ammo2 == -1)
+				{
+					if (getcvar("pi_showmaxammo"))
+						ammostring = strparam(d:ammo1, s:"/", d:ammo1max);
+					else
+						ammostring = strparam(d:ammo1);
+
+					if (highlightvalue)
+					{
+						highlight[2] = generatehighlight(3, ammo1, ammo1max);
+
+						if (highlight[2])
+							highlightactive[2] = true;
+					}
+				}
+				else
+				{
+					if (getcvar("pi_swapammo"))
+					{
+						int ammoswap = ammo1;
+						int ammoswapmax = ammo1max;
+
+						ammo1 = ammo2;
+						ammo2 = ammoswap;
+						ammo1max = ammo2max;
+						ammo2max = ammoswapmax;
+					}
+
+					ammostring = strparam(d:ammo1, s:"/", d:ammo2);
+
+					if (highlightvalue)
+					{
+						highlight[2] = generatehighlight(3, ammo1, ammo1max);
+
+						if (highlight[2])
+							highlightactive[2] = true;
+					}
+				}
+
+				haveammo = true;
+			}
+
+			text[2] = "Weapon";
+			value[2] = ammostring;
+		}
+
+		int abbreviate = getcvar("pi_abbreviate");
+		str spaceleft = "";
+
+		if (haveammo || havearmor || showhealth)
+		{
+			if (abbreviate < 0 || abbreviate > 8)
+				abbreviate = 4;
+
+			if (abbreviate)
+			{
+				for (i = 0; i < PI_TOTAL; i++)
+					text[i] = strleft(text[i], abbreviate);
+			}
+
+			alignvalue(getcvar("pi_alignvalue"));
+		}
+
+		if (!alignx)
+		{
+			spaceleft = generatespace(maxlength(0, false, 0) + offsetx + 1, 0);
+		}
+		else
+		{
+			spaceright(generatespace(maxlength(1, false, 0) + offsetx + 1, 0), 0);
+			spaceright(generatespace(offsetx, 0), 1);
+		}
+
+		if (showhealth)
+		{
+			texts = strparam(s:newline(texts), s:marginleft, s:coloredtext(PI_COLOR_DARK, text[0], true));
+			values = strparam(s:newline(values), s:spaceleft, s:coloredtext(highlightcolor(highlight[0]), value[0], highlightactive[0]));
+		}
+
+		if (havearmor)
+		{
+			texts = strparam(s:newline(texts), s:marginleft, s:coloredtext(PI_COLOR_DARK, text[1], true));
+			values = strparam(s:newline(values), s:spaceleft, s:coloredtext(highlightcolor(highlight[1]), value[1], highlightactive[1]));
+		}
+
+		if (haveammo)
+		{
+			texts = strparam(s:newline(texts), s:marginleft, s:coloredtext(PI_COLOR_DARK, text[2], true));
+			values = strparam(s:newline(values), s:spaceleft, s:coloredtext(highlightcolor(highlight[2]), value[2], highlightactive[2]));
+		}
+
+		if (strcmp(texts, ""))
+		{
+			str font = "SHAFONT";
+
+			if (getcvar("pi_doomfont"))
+				font = "SHADFONT";
+
+			setfont(font);
+			hudmessage(s:margintop, s:texts, s:marginbottom; flags, PI_ID_TEXTS, PI_BASECOLOR, x, y, PI_TIME, opacity);
+			hudmessage(s:margintop, s:values, s:marginbottom; flags, PI_ID_VALUES, PI_BASECOLOR, x, y, PI_TIME, opacity);
+		}
+	}
+}
+
+script "playerinfo" (void)
+{
+	playerinfo();
+	delay(PI_REFRESH);
+	restart;
+}
+
+script "playerinfodeath" DEATH
+{
+	if (playernumber() != scriptcall("playerinfobridge", "getconsoleplayer"))
+		terminate;
+
+	acs_namedterminate("playerinfo", 0);
+}
+
+script "playerinfoenter" ENTER
+{
+	if (playernumber() != scriptcall("playerinfobridge", "getconsoleplayer"))
+		terminate;
+
+	if (!strcmp("TITLEMAP", strparam(n:PRINTNAME_LEVEL)))
+		terminate;
+
+	acs_namedexecute("playerinfo", 0);
+}
+
+script "playerinforespawn" RESPAWN
+{
+	if (playernumber() != scriptcall("playerinfobridge", "getconsoleplayer"))
+		terminate;
+
+	if (!strcmp("TITLEMAP", strparam(n:PRINTNAME_LEVEL)))
+		terminate;
+
+	acs_namedexecute("playerinfo", 0);
+}
