@@ -1,3 +1,6 @@
+## April 26, 2023 (v1.04)
+- Minor code changes.
+
 ## July 6, 2021 (v1.03)
 - Fixed a bug that caused the add-on to stop working when highlighting is active.
 - Fixed an issue with incorrect highlight colors under certain conditions.

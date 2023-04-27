@@ -10,19 +10,19 @@ class playerinfobridge
 		int ammo1amount = -1, ammo1max = -1, ammo2amount = -1, ammo2max = -1;
 		playerinfo player = players[consoleplayer];
 
-		if (player.readyweapon != null)
+		if (player.readyweapon)
 		{
 			ammo1 = player.readyweapon.ammo1;
 			ammo2 = player.readyweapon.ammo2;
 		}
 
-		if (ammo1 != null)
+		if (ammo1)
 		{
 			ammo1amount = ammo1.amount;
 			ammo1max = ammo1.maxamount;
 		}
 
-		if (ammo2 != null)
+		if (ammo2)
 		{
 			ammo2amount = ammo2.amount;
 			ammo2max = ammo2.maxamount;
