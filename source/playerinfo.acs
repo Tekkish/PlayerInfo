@@ -512,7 +512,7 @@ script "playerinfoenter" ENTER
 	if (!strcmp("TITLEMAP", strparam(n:PRINTNAME_LEVEL)))
 		terminate;
 
-	acs_namedexecute("playerinfo", 0);
+	acs_namedexecutewithresult("playerinfo", 0);
 }
 
 script "playerinforespawn" RESPAWN
@@ -523,5 +523,5 @@ script "playerinforespawn" RESPAWN
 	if (!strcmp("TITLEMAP", strparam(n:PRINTNAME_LEVEL)))
 		terminate;
 
-	acs_namedexecute("playerinfo", 0);
+	acs_namedexecutewithresult("playerinfo", 0);
 }
