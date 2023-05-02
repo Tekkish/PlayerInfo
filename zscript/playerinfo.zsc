@@ -46,21 +46,21 @@ class playerinfohandler : eventhandler
 	override void renderoverlay(renderevent e) 
 	{
 		playerinfo player = players[consoleplayer];
-		bool showkeys = cvar.getcvar("pi_showkeys", player).getint();
+		bool showkeys = cvar.getcvar("pi_showkeys", player).getbool();
 
-		if (automapactive && !cvar.getcvar("pi_showonmap", player).getint())
+		if (automapactive && !cvar.getcvar("pi_showonmap", player).getbool())
 			showkeys = false;
 
-		if (showkeys && cvar.getcvar("pi_visible", player).getint())
+		if (showkeys && cvar.getcvar("pi_visible", player).getbool())
 		{
 			bool keyalign, keybottom, keyleft, keyright, keytop;
+			bool keyusesprites = cvar.getcvar("pi_keyusesprites", player).getbool();
 			int count = key.getkeytypecount();
 			int flags, keycount, keyplacement, keyretain, keyspace, x, y;
 			int keylimit = 12;
 			int keymargin = 6;
 			int keyposition = cvar.getcvar("pi_keyposition", player).getint();
 			int keysize = cvar.getcvar("pi_keysize", player).getint();
-			int keyusesprites = cvar.getcvar("pi_keyusesprites", player).getint();
 			int screenheight = screen.getheight();
 			int screenwidth = screen.getwidth();
 			int statusbar = screenheight - statusbar.gettopofstatusbar();
@@ -70,7 +70,7 @@ class playerinfohandler : eventhandler
 
 			if (keyposition == 0)
 			{
-				keyalign = cvar.getcvar("pi_keyalign", player).getint();
+				keyalign = cvar.getcvar("pi_keyalign", player).getbool();
 				keyplacement = cvar.getcvar("pi_keyplacement", player).getint();
 				x = cvar.getcvar("pi_xkey", player).getint();
 				y = cvar.getcvar("pi_ykey", player).getint();
