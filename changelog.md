@@ -1,3 +1,7 @@
+## October 24, 2023 (v1.07)
+- Added a numeric alignment option that only applies to health and armor.
+- Added an option to hide secondary ammo.
+
 ## May 2, 2023 (v1.06)
 - Minor code changes.
 

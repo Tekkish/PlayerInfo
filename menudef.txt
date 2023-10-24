@@ -12,11 +12,12 @@ OptionMenu "PI_Options"
 	ScaleSlider "Abbreviated Characters", "pi_abbreviate", 0, 8, 1, "None"
 	Option "Highlight Values", "pi_highlightvalue", "PI_YesNo"
 	Slider "Opacity Percentage", "pi_opacity", 10, 100, 1, 0
-	Option "Show Ammo Total", "pi_showmaxammo", "PI_YesNo"
 	Option "Show Armor", "pi_showarmor", "PI_ShowArmor"
 	Option "Show Health", "pi_showhealth", "PI_YesNo"
 	Option "Show Keys", "pi_showkeys", "PI_YesNo"
+	Option "Show Maximum Ammo", "pi_showmaxammo", "PI_YesNo"
 	Option "Show on Automap", "pi_showonmap", "PI_YesNo"
+	Option "Show Secondary Ammo", "pi_showammo2", "PI_YesNo"
 	Option "Show Weapon Ammo", "pi_showammo", "PI_YesNo"
 	Option "Swap Ammo Types", "pi_swapammo", "PI_YesNo"
 	Option "Use Doom Font", "pi_doomfont", "PI_YesNo"
@@ -56,6 +57,7 @@ OptionValue "PI_AlignValue"
 {
 	0, "Standard"
 	1, "Numeric"
+	2, "Numeric (Armor, Health)"
 }
 
 OptionValue "PI_AlignX"

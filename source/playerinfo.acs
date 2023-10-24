@@ -30,14 +30,19 @@ str value[PI_TOTAL];
    Functions
 \------------*/
 
-function void alignvalue(bool align)
+function void alignvalue(int align)
 {
-	for (int i = 0; i < PI_TOTAL; i++)
+	int total = PI_TOTAL;
+
+	if (align == 2)
+		total--;
+
+	for (int i = 0; i < total; i++)
 	{
 		if (strcmp(text[i], ""))
 		{
 			if (align)
-				value[i] = strparam(s:generatespace(maxlength(1, false, 0) - strlen(value[i]), 0), s:value[i]);
+				value[i] = strparam(s:generatespace(maxlength(1, false, total) - strlen(value[i]), 0), s:value[i]);
 		}
 	}
 }
@@ -412,7 +417,10 @@ function void playerinfo(void)
 						ammo2max = ammoswapmax;
 					}
 
-					ammostring = strparam(d:ammo1, s:"/", d:ammo2);
+					if (getcvar("pi_showammo2"))
+						ammostring = strparam(d:ammo1, s:"/", d:ammo2);
+					else
+						ammostring = strparam(d:ammo1);
 
 					if (highlightvalue)
 					{
