@@ -377,7 +377,7 @@ function void playerinfo(void)
 			int ammo1max = getcvar("pi_bridge_ammo1max");
 			int ammo2 = getcvar("pi_bridge_ammo2");
 			int ammo2max = getcvar("pi_bridge_ammo2max");
-			str ammostring = "";
+			str ammostring = "N/A";
 
 			if (ammo1 != -1 || ammo2 != -1)
 			{
@@ -477,7 +477,7 @@ function void playerinfo(void)
 			values = strparam(s:newline(values), s:spaceleft, s:coloredtext(highlightcolor(highlight[1]), value[1], highlightactive[1]));
 		}
 
-		if (haveammo)
+		if (haveammo || !haveammo)
 		{
 			texts = strparam(s:newline(texts), s:marginleft, s:coloredtext(PI_COLOR_DARK, text[2], true));
 			values = strparam(s:newline(values), s:spaceleft, s:coloredtext(highlightcolor(highlight[2]), value[2], highlightactive[2]));
