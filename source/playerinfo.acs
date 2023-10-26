@@ -309,11 +309,10 @@ function void playerinfo(void)
 
 		bool haveammo, havearmor;
 		bool highlightvalue = getcvar("pi_highlightvalue");
-		bool showammo = getcvar("pi_showammo");
 		bool showhealth = getcvar("pi_showhealth");
-		bool showonmap = getcvar("pi_showonmap");
 		int flags, i;
 		int opacity = getcvar("pi_opacity");
+		int showammo = getcvar("pi_showammo");
 		int showarmor = getcvar("pi_showarmor");
 		str texts = "", values = "";
 
@@ -325,7 +324,7 @@ function void playerinfo(void)
 			value[i] = "";
 		}
 
-		if (showonmap)
+		if (getcvar("pi_showonmap"))
 			flags = PI_FLAGS;
 		else
 			flags = PI_FLAGS | HUDMSG_NOTWITHFULLMAP;
@@ -431,6 +430,12 @@ function void playerinfo(void)
 					}
 				}
 
+				haveammo = true;
+			}
+
+			if (!haveammo && showammo == 2)
+			{
+				ammostring = "N/A";
 				haveammo = true;
 			}
 
