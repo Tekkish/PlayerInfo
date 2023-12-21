@@ -1,3 +1,6 @@
+## December 21, 2023 (v1.09)
+- Minor code changes.
+
 ## October 26, 2023 (v1.08)
 - Added an option to always show weapon ammo.
 
