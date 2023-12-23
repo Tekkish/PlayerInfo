@@ -519,10 +519,7 @@ script "playerinfodeath" DEATH
 
 script "playerinfoenter" ENTER
 {
-	if (playernumber() != scriptcall("playerinfobridge", "getconsoleplayer"))
-		terminate;
-
-	if (!strcmp("TITLEMAP", strparam(n:PRINTNAME_LEVEL)))
+	if (!strcmp("TITLEMAP", strparam(n:PRINTNAME_LEVEL)) || playernumber() != scriptcall("playerinfobridge", "getconsoleplayer") || scriptcall("playerinfobridge", "getnoautosavehint"))
 		terminate;
 
 	acs_namedexecutewithresult("playerinfo", 0);
@@ -530,10 +527,7 @@ script "playerinfoenter" ENTER
 
 script "playerinforespawn" RESPAWN
 {
-	if (playernumber() != scriptcall("playerinfobridge", "getconsoleplayer"))
-		terminate;
-
-	if (!strcmp("TITLEMAP", strparam(n:PRINTNAME_LEVEL)))
+	if (!strcmp("TITLEMAP", strparam(n:PRINTNAME_LEVEL)) || playernumber() != scriptcall("playerinfobridge", "getconsoleplayer") || scriptcall("playerinfobridge", "getnoautosavehint"))
 		terminate;
 
 	acs_namedexecutewithresult("playerinfo", 0);
