@@ -22,6 +22,7 @@
 #define PI_TOTAL		3
 #define PI_TIME			(PI_REFRESH << 16) / PI_TICRATE + 1
 
+bool killswitch;
 bool highlightactive[PI_TOTAL];
 int highlight[PI_TOTAL];
 str text[PI_TOTAL];
@@ -510,17 +511,15 @@ function void playerinfo(void)
 
 script "playerinfo" (void)
 {
+	if (scriptcall(PI_BRIDGE, "getdeath"))
+	{
+		killswitch = true;
+		terminate;
+	}
+
 	playerinfo();
 	delay(PI_REFRESH);
 	restart;
-}
-
-script "playerinfodeath" DEATH
-{
-	if (playernumber() != scriptcall(PI_BRIDGE, "getconsoleplayer"))
-		terminate;
-
-	acs_namedterminate("playerinfo", 0);
 }
 
 script "playerinfoenter" ENTER
@@ -533,8 +532,12 @@ script "playerinfoenter" ENTER
 
 script "playerinforespawn" RESPAWN
 {
-	if (!strcmp("TITLEMAP", strparam(n:PRINTNAME_LEVEL)) || playernumber() != scriptcall(PI_BRIDGE, "getconsoleplayer") || scriptcall(PI_BRIDGE, "getnoautosavehint"))
+	if (playernumber() != scriptcall(PI_BRIDGE, "getconsoleplayer") || scriptcall(PI_BRIDGE, "getnoautosavehint"))
 		terminate;
 
-	acs_namedexecutewithresult("playerinfo", 0);
+	if (killswitch)
+	{
+		killswitch = false;
+		acs_namedexecutewithresult("playerinfo", 0);
+	}
 }
