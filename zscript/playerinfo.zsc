@@ -35,9 +35,36 @@ class playerinfobridge
 		return ammo1amount;
 	}
 
+	ui private static int getarmor()
+	{
+		int armor;
+		playerinfo player = players[consoleplayer];
+
+		let basicarmor = basicarmor(player.mo.findinventory("BasicArmor"));
+		let hexenarmor = hexenarmor(player.mo.findinventory("HexenArmor"));
+
+		if (hexenarmor)
+			armor = int(hexenarmor.slots[0] + hexenarmor.slots[1] + hexenarmor.slots[2] + hexenarmor.slots[3]);
+
+		if (basicarmor && !armor)
+			armor = basicarmor.amount;
+
+		return armor;
+	}
+
 	ui private static int getconsoleplayer()
 	{
 		return consoleplayer;
+	}
+
+	ui private static int gethealth()
+	{
+		playerinfo player = players[consoleplayer];
+
+		if (player.health)
+			return player.health;
+
+		return 0;
 	}
 
 	ui private static bool getnoautosavehint()

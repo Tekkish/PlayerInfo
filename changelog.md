@@ -1,3 +1,7 @@
+## January 7, 2024 (v1.11)
+- Fixed an issue that could cause the add-on to stop working after unmorphing.
+- Hexen armor values will now be displayed.
+
 ## December 23, 2023 (v1.10)
 - The add-on no longer starts on intro or demo styled maps.
 
