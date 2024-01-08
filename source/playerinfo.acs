@@ -56,11 +56,6 @@ function str coloredtext(str color, str string, bool addcolor)
 	return string;
 }
 
-function int getcvarplayer(str cvar)
-{
-	return getusercvar(scriptcall(PI_BRIDGE, "getconsoleplayer"), cvar);
-}
-
 function int generatehighlight(int type, int value1, int value2)
 {
 	int highlighttype;
@@ -130,6 +125,11 @@ function str generatespace(int amount, int type)
 	}
 
 	return space;
+}
+
+function int getcvarplayer(str cvar)
+{
+	return getusercvar(scriptcall(PI_BRIDGE, "getconsoleplayer"), cvar);
 }
 
 function str highlightcolor(int type)
