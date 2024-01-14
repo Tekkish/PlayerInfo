@@ -529,7 +529,7 @@ script "playerinfoenter" ENTER
 	if (!strcmp("TITLEMAP", strparam(n:PRINTNAME_LEVEL)) || playernumber() != scriptcall(PI_BRIDGE, "getconsoleplayer") || scriptcall(PI_BRIDGE, "getnoautosavehint"))
 		terminate;
 
-	acs_namedexecutewithresult("playerinfo", 0);
+	acs_namedexecutewithresult("playerinfo");
 }
 
 script "playerinforespawn" RESPAWN
@@ -540,6 +540,6 @@ script "playerinforespawn" RESPAWN
 	if (killswitch)
 	{
 		killswitch = false;
-		acs_namedexecutewithresult("playerinfo", 0);
+		acs_namedexecutewithresult("playerinfo");
 	}
 }
