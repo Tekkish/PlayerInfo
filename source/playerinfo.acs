@@ -24,6 +24,7 @@
 
 bool killswitch;
 bool highlightactive[PI_TOTAL];
+int consoleplayer;
 int highlight[PI_TOTAL];
 str text[PI_TOTAL];
 str value[PI_TOTAL];
@@ -130,7 +131,7 @@ function str generatespace(int amount, int type)
 
 function int getcvarplayer(str cvar)
 {
-	return getusercvar(scriptcall(PI_BRIDGE, "getconsoleplayer"), cvar);
+	return getusercvar(consoleplayer, cvar);
 }
 
 function str highlightcolor(int type)
@@ -517,6 +518,7 @@ script "playerinfo" (void)
 		terminate;
 	}
 
+	consoleplayer = scriptcall(PI_BRIDGE, "getconsoleplayer");
 	playerinfo();
 	delay(PI_REFRESH);
 	restart;
