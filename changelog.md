@@ -1,3 +1,6 @@
+## March 27, 2025 (v1.14)
+- Added support for language translations.
+
 ## January 14, 2024 (v1.13)
 - Minor performance optimizations.
 

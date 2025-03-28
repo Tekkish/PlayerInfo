@@ -1,118 +1,118 @@
 AddOptionMenu "OptionsMenu"
 {
-	Submenu "PlayerInfo Options", "PI_Options"
+	Submenu "$PI_MENU_TITLE", "PI_Options"
 }
 
 OptionMenu "PI_Options"
 {
-	Title "PlayerInfo Options"
-	Option "Show PlayerInfo", "pi_visible", "PI_YesNo"
+	Title "$PI_MENU_TITLE"
+	Option "$PI_OPTION_VISIBLE", "pi_visible", "PI_YesNo"
 	StaticText ""
-	StaticText "General Options", 1
-	ScaleSlider "Abbreviated Characters", "pi_abbreviate", 0, 8, 1, "None"
-	Option "Highlight Values", "pi_highlightvalue", "PI_YesNo"
-	Slider "Opacity Percentage", "pi_opacity", 10, 100, 1, 0
-	Option "Show Armor", "pi_showarmor", "PI_ShowAmmoArmor"
-	Option "Show Health", "pi_showhealth", "PI_YesNo"
-	Option "Show Keys", "pi_showkeys", "PI_YesNo"
-	Option "Show Maximum Ammo", "pi_showmaxammo", "PI_YesNo"
-	Option "Show on Automap", "pi_showonmap", "PI_YesNo"
-	Option "Show Secondary Ammo", "pi_showammo2", "PI_YesNo"
-	Option "Show Weapon Ammo", "pi_showammo", "PI_ShowAmmoArmor"
-	Option "Swap Ammo Types", "pi_swapammo", "PI_YesNo"
-	Option "Use Doom Font", "pi_doomfont", "PI_YesNo"
-	Option "Value Alignment", "pi_alignvalue", "PI_AlignValue"
+	StaticText "$PI_MENU_GENERAL", 1
+	ScaleSlider "$PI_OPTION_ABBREVIATE", "pi_abbreviate", 0, 8, 1, "$PI_VALUE_NONE"
+	Option "$PI_OPTION_HIGHLIGHTVALUE", "pi_highlightvalue", "PI_YesNo"
+	Slider "$PI_OPTION_OPACITY", "pi_opacity", 10, 100, 1, 0
+	Option "$PI_OPTION_SHOWARMOR", "pi_showarmor", "PI_ShowAmmoArmor"
+	Option "$PI_OPTION_SHOWHEALTH", "pi_showhealth", "PI_YesNo"
+	Option "$PI_OPTION_SHOWKEYS", "pi_showkeys", "PI_YesNo"
+	Option "$PI_OPTION_SHOWMAXAMMO", "pi_showmaxammo", "PI_YesNo"
+	Option "$PI_OPTION_SHOWONMAP", "pi_showonmap", "PI_YesNo"
+	Option "$PI_OPTION_SHOWAMMO2", "pi_showammo2", "PI_YesNo"
+	Option "$PI_OPTION_SHOWAMMO", "pi_showammo", "PI_ShowAmmoArmor"
+	Option "$PI_OPTION_SWAPAMMO", "pi_swapammo", "PI_YesNo"
+	Option "$PI_OPTION_DOOMFONT", "pi_doomfont", "PI_YesNo"
+	Option "$PI_OPTION_ALIGNVALUE", "pi_alignvalue", "PI_AlignValue"
 	StaticText ""
-	StaticText "Position Options", 1
-	StaticText "You can specify a custom position"
-	StaticText "for PlayerInfo below. Note that it's"
-	StaticText "possible to exceed the boundries of the"
-	StaticText "screen if a low resolution is being used."
+	StaticText "$PI_MENU_POSITION", 1
+	StaticText "$PI_MENU_TEXT_POSITION1"
+	StaticText "$PI_MENU_TEXT_POSITION2"
+	StaticText "$PI_MENU_TEXT_POSITION3"
+	StaticText "$PI_MENU_TEXT_POSITION4"
 	StaticText ""
-	Option "Position Preset", "pi_position", "PI_Position"
+	Option "$PI_OPTION_POSITION", "pi_position", "PI_Position"
 	StaticText ""
-	StaticText "If the chosen preset is custom, you"
-	StaticText "can further tweak the position below."
+	StaticText "$PI_MENU_TEXT_PRESET1"
+	StaticText "$PI_MENU_TEXT_PRESET2"
 	StaticText ""
-	Option "Horizontal Alignment", "pi_alignx", "PI_AlignX"
-	Slider "Horizontal Position", "pi_x", 0, 90, 1, 0
-	Option "Vertical Alignment", "pi_aligny", "PI_AlignY"
-	Slider "Vertical Position", "pi_y", 0, 50, 1, 0
+	Option "$PI_OPTION_ALIGNX", "pi_alignx", "PI_AlignX"
+	Slider "$PI_OPTION_X", "pi_x", 0, 90, 1, 0
+	Option "$PI_OPTION_ALIGNY", "pi_aligny", "PI_AlignY"
+	Slider "$PI_OPTION_Y", "pi_y", 0, 50, 1, 0
 	StaticText ""
-	StaticText "Key Options", 1
-	Option "Keys Position Preset", "pi_keyposition", "PI_KeyPosition"
-	Option "Use Key Spawn Sprites", "pi_keyusesprites", "PI_YesNo"
+	StaticText "$PI_MENU_KEY", 1
+	Option "$PI_OPTION_KEYPOSITION", "pi_keyposition", "PI_KeyPosition"
+	Option "$PI_OPTION_KEYUSESPRITES", "pi_keyusesprites", "PI_YesNo"
 	StaticText ""
-	StaticText "If the chosen key preset is custom,"
-	StaticText "you can further tweak it below."
+	StaticText "$PI_MENU_TEXT_KEY1"
+	StaticText "$PI_MENU_TEXT_KEY2"
 	StaticText ""
-	Option "Align Keys to Bottom", "pi_keyalign", "PI_YesNo"
-	Option "Keys Placement", "pi_keyplacement", "PI_KeyPlacement"
-	Slider "Keys Size", "pi_keysize", 1, 6, 1, 0
-	Slider "Keys Horizontal Position", "pi_xkey", 0, 3840, 1, 0
-	Slider "Keys Vertical Position", "pi_ykey", 0, 2160, 1, 0
+	Option "$PI_OPTION_KEYALIGN", "pi_keyalign", "PI_YesNo"
+	Option "$PI_OPTION_KEYPLACEMENT", "pi_keyplacement", "PI_KeyPlacement"
+	Slider "$PI_OPTION_KEYSIZE", "pi_keysize", 1, 6, 1, 0
+	Slider "$PI_OPTION_XKEY", "pi_xkey", 0, 3840, 1, 0
+	Slider "$PI_OPTION_YKEY", "pi_ykey", 0, 2160, 1, 0
 }
 
 OptionValue "PI_AlignValue"
 {
-	0, "Standard"
-	1, "Numeric"
-	2, "Numeric (Armor, Health)"
+	0, "$PI_VALUE_STANDARD"
+	1, "$PI_VALUE_NUMERIC"
+	2, "$PI_VALUE_NUMERICARMORHEALTH"
 }
 
 OptionValue "PI_AlignX"
 {
-	0, "Left"
-	1, "Right"
+	0, "$PI_VALUE_LEFT"
+	1, "$PI_VALUE_RIGHT"
 }
 
 OptionValue "PI_AlignY"
 {
-	0, "Top"
-	1, "Bottom"
+	0, "$PI_VALUE_TOP"
+	1, "$PI_VALUE_BOTTOM"
 }
 
 OptionValue "PI_KeyPlacement"
 {
-	0, "Left to Right"
-	2, "Right to Left"
-	3, "Top to Bottom"
-	1, "Bottom to Top"
+	0, "$PI_VALUE_LEFTTORIGHT"
+	2, "$PI_VALUE_RIGHTTOLEFT"
+	3, "$PI_VALUE_TOPTOBOTTOM"
+	1, "$PI_VALUE_BOTTOMTOTOP"
 }
 
 OptionValue "PI_KeyPosition"
 {
-	0, "Custom"
-	1, "Top Left, Horizontal"
-	2, "Top Left, Vertical"
-	3, "Bottom Left, Vertical"
-	4, "Bottom Left, Horizontal"
-	5, "Top Right, Horizontal"
-	6, "Top Right, Vertical"
-	7, "Bottom Right, Vertical"
-	8, "Bottom Right, Horizontal"
+	0, "$PI_VALUE_CUSTOM"
+	1, "$PI_VALUE_TOPLEFTHORIZONTAL"
+	2, "$PI_VALUE_TOPLEFTVERTICAL"
+	3, "$PI_VALUE_BOTTOMLEFTVERTICAL"
+	4, "$PI_VALUE_BOTTOMLEFTHORIZONTAL"
+	5, "$PI_VALUE_TOPRIGHTHORIZONTAL"
+	6, "$PI_VALUE_TOPRIGHTVERTICAL"
+	7, "$PI_VALUE_BOTTOMRIGHTVERTICAL"
+	8, "$PI_VALUE_BOTTOMRIGHTHORIZONTAL"
 }
 
 OptionValue "PI_Position"
 {
-	0, "Custom"
-	1, "Top Left"
-	2, "Center Left"
-	3, "Bottom Left"
-	4, "Top Right"
-	5, "Center Right"
-	6, "Bottom Right"
+	0, "$PI_VALUE_CUSTOM"
+	1, "$PI_VALUE_TOPLEFT"
+	2, "$PI_VALUE_CENTERLEFT"
+	3, "$PI_VALUE_BOTTOMLEFT"
+	4, "$PI_VALUE_TOPRIGHT"
+	5, "$PI_VALUE_CENTERRIGHT"
+	6, "$PI_VALUE_BOTTOMRIGHT"
 }
 
 OptionValue "PI_ShowAmmoArmor"
 {
-	0, "No"
-	1, "Yes"
-	2, "Always"
+	0, "$PI_VALUE_NO"
+	1, "$PI_VALUE_YES"
+	2, "$PI_VALUE_ALWAYS"
 }
 
 OptionValue "PI_YesNo"
 {
-	0, "No"
-	1, "Yes"
+	0, "$PI_VALUE_NO"
+	1, "$PI_VALUE_YES"
 }
