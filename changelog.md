@@ -1,3 +1,6 @@
+## September 3, 2025 (v1.15)
+- Minor font changes.
+
 ## March 27, 2025 (v1.14)
 - Added support for language translations.
 
